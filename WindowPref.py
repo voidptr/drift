@@ -3,7 +3,13 @@ import math
 
 
 class WindowPref:
+    """
+    Wrapper for Curses
+    """
     class Edge:
+        """
+        A standard box class
+        """
         def __init__(self, left=0, right=0, top=0, bottom=0):
             self.left = left
             self.right = right
@@ -11,6 +17,9 @@ class WindowPref:
             self.bottom = bottom
 
     def __init__(self, left=0, right=0, top=0, bottom=0, bg=None, has_border=False, window=None, windowname=None, mainwindow=None, debughook=None):
+        """
+        Constructor
+        """
         self.window = window
         self.pos = WindowPref.Edge(left, right, top, bottom)
         self.bg = bg  # color
