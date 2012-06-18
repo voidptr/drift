@@ -1,7 +1,8 @@
 class DriftMap:
     """
     Holds and manages the world map
-    """
+    (model) - static, for the most part... that is unless you've dug a hole or something.
+    """    
     class Level:
         """
         Individual Levels - stuff that is separated by entrances
@@ -67,3 +68,9 @@ class DriftMap:
             Identify which Area a character is in
             """
             return []  # TODO http://alienryderflex.com/polygon/
+    def __init__(self, level_files):
+        self.levels = {}
+        for (name, file) in level_files:
+            self.levels[name] = DriftMap.Level(name, file)
+            
+

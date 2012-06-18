@@ -1,52 +1,43 @@
 """
 Drift: A Fallthru Clone
 """
+from DebugLog import DebugLog
+from DriftModelManager import DriftModelManager
+from DriftViewManager import DriftViewManager
+from DriftController import DriftController
 
-import curses
+debug_handle = DebugLog()
+debug_handle.init()
 
+DataModels = DriftModelManager(debug_handle.log)
+DataModels.init()
 
-def forward_time_step(units):
-    """
-    Do the things involved with moving forward a time step
-    """
-    return 0
+View = DriftViewManager(debug_handle.log, DataModels)
+View.init()
 
-
-def handle_input(value):
-    """ Handle the keypresses """
-
-    if value == "hi":
-        screen.addstr("HELLO TO YOU TOO")
-    elif value == "quit":
-        quit_program()
-    else:
-        screen.addstr("WHA?")
-
-    screen.move(WINDOW_HEIGHT - 1, 0)
-
-
-def setup_screen():
-    screen.clear()
-    screen.border()  # all the way around
-
-    #screen.move(WINDOW_HEIGHT - 1, 0)
-
-
-def quit_program():
-    curses.endwin()
-    exit()
-
-## set up the basic curses stuff
-screen = curses.initscr()
-curses.curs_set(0)
-WINDOW_HEIGHT, WINDOW_WIDTH = screen.getmaxyx()
-
-## draw the border
-
+Controller = DriftController(View, DataModels)
 
 while True:
-    screen.refresh()
-    value = screen.getstr()
-    handle_input(value)
+    ###### YOUR TURN
+    ## Process any commands to move things, throw things, buy things, 
+    ## eat things, drink things, gather things,
+    ## do things, look at things, move around, or wait
+    Controller.process_command() ## time passes
+    
+    ###### THEIR TURN IN THIS PLACE
+    ## Initiate encounter checks (are we having a new encounter?)
+    ## If so, process any commands issued by the opponent in the encounter
+    Controller.process_encounter()
 
-curses.endwin()
+    ## Refresh the window
+    View.refresh() ## update status, clear the input window, show 
+                   ## whatever queued up stuff needs showing
+                   ## grab the input cursor
+
+
+
+
+
+
+
+
