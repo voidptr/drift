@@ -1,45 +1,41 @@
+from CommandParser import CommandParser
+
+
 class DriftController:
-"""
-Handle Commands, Manage Encounters
-"""
-    def __init__(self, ViewManager, ModelManager):
+    """
+    Handle Commands, Manage Encounters
+    """
+    def __init__(self, debughook, ViewManager, ModelManager):
         self.ViewManager = ViewManager
         self.ModelManager = ModelManager
+        self.debughook = debughook
+
+        self.commands = dict()
+        self.commands['travel'] = self.travel
+
+    def _get_input(self):
+        return self.ViewManager.get_input_string()
 
     def process_command(self):
-        command = self._get_input()
-        first_word = command.split( )[0]
+        input = self._get_input()
 
-        self.commands[first_word](command)
+        (command, parameters) = CommandParser.parse_commands(input)
 
-    def process_attack(self,command):
-        command_pieces = command.split()
-        ct = len(command_pieces)
+        if not command in self.commands:
+            self.ViewManager.provide_command_feedback("I don't understand, %s" % command)
+        else:
+            if len(parameters) > 0:
+                (success, message) = self.commands[command](parameters)
+            else:
+                (success, message) = self.commands[command]()
 
-#        ## set weapon and target defaults
-#        target = self.ModelManager.Encounter.get_opponent()
-#        weapon = self.ModelManager.Player.get_equipped_weapon()
+            if not success:
+                self.ViewManager.provide_command_feedback(message)
 
-        ## defaults
-        target = ""
-        weapon = ""
-        ## parse the command
-        if command_pieces[0] == "attack": ## attack [opponent [[with] weapon]]
-            if ct > 1:
-                target = command_pieces[1]
-            if ct > 2: ## possible "with"
-                weapon = command_pieces[-1]
-        elif command_pieces[0] == "throw": ## throw [weapon [[at] opponent]]
-            if ct > 1:
-                weapon = command_pieces[1]
-            if ct > 2: ## possible "at"
-                target = command_pieces[-1]
-        elif command_pieces[0] == "shoot": ## could go either way
-            
-        ## perform the action    
-        if target == None
+    def process_encounter(self):
+        self.debughook("PROCESS ENCOUNTER")
 
-        self.
-
-
-
+    def travel(self, parameters):
+        direction = parameters[0]
+        self.debughook("TRAVEL! %s" % direction)
+        return (True, "")

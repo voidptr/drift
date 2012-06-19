@@ -28,3 +28,6 @@ pip-log.txt
 
 #Vim
 *.swp
+
+# project specific
+log.log

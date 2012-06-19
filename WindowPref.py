@@ -16,7 +16,9 @@ class WindowPref:
             self.top = top
             self.bottom = bottom
 
-    def __init__(self, left=0, right=0, top=0, bottom=0, bg=None, has_border=False, window=None, windowname=None, mainwindow=None, debughook=None):
+    def __init__(self, left=0, right=0, top=0, bottom=0, bg=None,
+            has_border=False, window=None, windowname=None, mainwindow=None,
+            debughook=None):
         """
         Constructor
         """
@@ -53,7 +55,7 @@ class WindowPref:
     def debug(self, message):
         if self.debughook:
             self.debughook(str(self))
-            self.debughook(message)
+            self.debughook(" %s" % message)
 
     def clear(self):  # set up the basic shit, since we just cleared it.
         self.debug("clear")
@@ -97,7 +99,7 @@ class WindowPref:
         if not left:
             left = self.textbox.left
 
-        self.debug("_draw_text_base text: %s attr:%s top:%s left:%s" % (text, attr, top, left))
+        #self.debug("_draw_text_base text: %s attr:%s top:%s left:%s" % (text, attr, top, left))
 
         line_width = self.text_width()
         line_ct = len(text) / float(line_width)
@@ -112,13 +114,20 @@ class WindowPref:
             line = text[start:end]
             self._draw_line(line, attr=attr, top=(top + i), left=left)
 
+    def draw_text_centered(self, text, attr=None, top=None):
+        centerpoint = self.width() / 2
+        half_text_length = len(text) / 2
+        left = centerpoint - half_text_length
+
+        self.draw_text(text, attr=attr, top=top, left=left)
+
     def draw_text(self, text, attr=None, top=None, left=None):
-        self.clear()
+        #self.clear()
 
         self._draw_text_base(text, attr=attr, top=top, left=left)
 
         self.refresh()
 
-    def grab_cursor(self):
+    def grab_cursor(self, top=0, left=0):
         self.debug("grab_cursor")
-        self.mainwindow.move(self.pos.top + self.textbox.top, self.pos.left + self.textbox.left)
+        self.mainwindow.move(self.pos.top + self.textbox.top + top, self.pos.left + self.textbox.left + left)
