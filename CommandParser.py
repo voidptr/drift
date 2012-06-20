@@ -1,12 +1,21 @@
 class CommandParser:
 
-    quantifiers = ["lbs", "lb", "oz", "qt", "pint", "stick"]
+    quantifiers = ["lbs", "lb", "oz", "qt", "pint", "stick", "stk"]
     identifiers = ["c%02d" % num for num in range(100)] + \
             ["s%02d" % num for num in range(100)] + \
             ["p%02d" % num for num in range(100)] + \
             ["b%02d" % num for num in range(100)] + \
             ["pecos", "cactus", "scrub", "ipecac", "tailwind", "snort"] + \
             ["drifter", "vagrant"]
+
+    generic_containers = ["pack", "backpack", "sack", "burro", "boat", "canteen", "bottle", "lamp"]
+
+    infoable_nouns = ["oasis", "slavhos", "cove", "dome"]
+
+    accessories = ["cape", "coat", "navaid", "brz ring", "sil ring", "gld ring", "talisman",
+                   "flyr", "brz amulet", "sil amulet", "gld amulet", "lamp"]
+
+    encounter_targets = ["devi", "squir", "berven", "griven", "demon", "renegade", "squal", "rabir", "wolven"]
 
     addressable_nouns = ["wood", "food", "ruby", "rock", "salve", "rall", "em",
                          "arrow", "sand", "water", "oil", "grain", "armor", "axe",
@@ -18,6 +27,20 @@ class CommandParser:
                          "flint", "pecos", "cactus", "scrub", "ipecac", "tailwind", "snort",
                          "drifter", "vagrant", "burro", "sack", "canteen", "lamp", "pack",
                          "bottle"]
+
+    verbs = ["yes", "cut", "dig", "eat", "ent", "put", "run", "back",
+             "bend", "down", "drop", "east", "fill", "give", "hunt", "info",
+             "kill", "look", "move", "open", "pick", "quit", "rest", "read",
+             "save", "sell", "take", "turn", "west", "agree", "apply", "attack",
+             "break", "climb", "collect", "drink", "empty", "enter", "extinguish", "fight",
+             "forward", "gather", "hello", "inventory", "light", "level", "north", "northeast",
+             "northwest", "order", "prepare", "render", "repeat", "load", "shoot", "sling", "south",
+             "southeast", "southwest", "steal", "strike", "surrender", "throw", "trade",
+             "twist", "untie", "yield"]
+
+    #connectives = ["the"
+
+    numbers = [str(val) for val in range(11)] + ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
 
     compound_starters = ["stone", "sil", "silver", "gld", "gold", "brz", "bronze"]
 
@@ -44,6 +67,10 @@ class CommandParser:
     @staticmethod
     def is_compound(val):
         return val in CommandParser.compound_starters
+
+    @staticmethod
+    def is_verb(val):
+        return val in CommandParser.verbs
 
     @staticmethod
     def extract_object_tokens(reversed_token_list):
@@ -81,6 +108,8 @@ class CommandParser:
         input_tokens.reverse()  # for faster popping
 
         command = input_tokens.pop()  # the root command
+        if not CommandParser.is_verb(command):
+            return ("command", ())
 
         ## directional commands
         if command == "n" or command == "north" or command == "s" or command == "south" or \
@@ -111,8 +140,8 @@ class CommandParser:
             source = "here"
             target = "hand"
             return ("move", (source, target, objects))
-        elif command == "drop" or command == "dp" or command == "put":
-            if command == "put" and input_tokens[-1] == "down":
+        elif command == "drop" or command == "dp" or command == "put" or command == "lay":
+            if (command == "put" or command == "lay") and input_tokens[-1] == "down":
                 input_tokens.pop()  # pop the superfluous
             objects = CommandParser.extract_object_tokens(input_tokens)
             return ("move", (source, target, objects))
