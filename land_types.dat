@@ -1,0 +1,4 @@
+#id,traveltime,viewdistance,inside_description,edge_description,noun
+farm,20,2,You are in a slightly rolling region of well-kept farms.,To the %%2 you see a slightly rolling region of well-kept farms.,farmland
+glume,30,0,Ancient trees of Glu'me forest tower over you.,Somber shadows of Glu'me forest crowd the %%1 to the %%2,forest
+beach,30,2,You are on a beach yay!,You see the shore to the %%2,beach

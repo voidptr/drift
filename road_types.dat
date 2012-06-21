@@ -1,0 +1,3 @@
+#id,traveltime,description,intersection_description,end_description,noun
+path,15,A rough path runs %%2.,Paths go %%2.,The rough path runs %%2.,path
+road,12,A road runs %%2., An intersection of roads go %%2.,The road runs %%2.,road

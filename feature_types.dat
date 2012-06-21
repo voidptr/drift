@@ -1,0 +1,3 @@
+#id,description,activities
+farm,You are at an %%3 open gate to a farm,enter_farm
+rockpit,Rocks can be gathered here,gather_rocks
