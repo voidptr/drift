@@ -1,5 +1,5 @@
 ## models
-from DriftMap import DriftMap
+import DriftMap
 from Player import Player
 from State import State
 
@@ -19,12 +19,11 @@ class DriftModelManager:
         self.state = None
 
     def create_new_game(self, name):
-        self.player = Player(name, 0)
+        self.world_map = DriftMap.DriftWorld("world_map.dat")
+        self.player = Player(name)
 
-        self.levels = [('Level1', 'Level1.dat')]  # TODO replace this
-        self.world_map = DriftMap(self.levels)
-
-        self.state = State()  # TODO - fix to inform the initial state with whatever the proper initial state of the game is
+        self.state = State(current_level=self.world_map.starting_level,
+                x=self.world_map.starting_x, y=self.world_map.starting_y)
 
     def get_player_name(self):
         return self.player.name
@@ -32,14 +31,11 @@ class DriftModelManager:
     def get_odometer(self):
         return (self.state.odometer, self.state.last_direction)
 
-    def get_lighting(self):
-        return self.state.lighting
-
     def get_clock(self):
         return (self.state.clock.hours(), self.state.clock.minutes_in_hour())
 
     def get_date(self):
-        return self.state.date
+        return self.state.clock.days()
 
     def get_section_of_day(self):
         return self.state.clock.section_of_day()
@@ -57,7 +53,29 @@ class DriftModelManager:
         return self.player.injury
 
     def get_lighting_condition(self):
-        return self.state.lighting
+        lighting_paradigm = self.world_map.get_lighting_paradigm(
+                self.state.current_level,
+                self.state.x,
+                self.state.y)
+
+        if lighting_paradigm == "outdoors":
+            if self.state.clock.section_of_day() != "NIGHT":
+                return "DAYLIGHT"
+            elif self.state.clock.moon_phase() != "NEW MOON":
+                return "MOONLIGHT"
+            elif self.state.lamp_on:
+                return "LAMPLIGHT"
+            elif self.state.fire_on:
+                return "FIRELIGHT"
+            else:
+                return "STARLIGHT"  # todo - danger
+        elif lighting_paradigm == "indoor_lit":
+            return "LIT"
+        else:
+            return "DARK"  # todo - danger
 
     def get_current_displaying_text(self):
-        return self.state.current_text
+        return self.world_map.get_description(
+                self.state.current_level,
+                self.state.x,
+                self.state.y)

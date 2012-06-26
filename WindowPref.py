@@ -54,8 +54,9 @@ class WindowPref:
 
     def debug(self, message):
         if self.debughook:
-            self.debughook(str(self))
-            self.debughook(" %s" % message)
+            #self.debughook(str(self))
+            #self.debughook(" %s" % message)
+            return
 
     def clear(self):  # set up the basic shit, since we just cleared it.
         self.debug("clear")

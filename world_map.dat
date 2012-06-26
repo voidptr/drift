@@ -1,0 +1,2 @@
+#id,lands_filename,features_filename,land_types_filename,feature_types_filename,starting,starting_x,starting_y
+root,landscape.dat,features.dat,land_types.dat,feature_types.dat,1,0,0

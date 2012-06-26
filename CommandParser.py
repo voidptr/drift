@@ -1,4 +1,38 @@
+import Activities
+
+
 class CommandParser:
+    def __init__(self, debughook, ModelManager):
+
+        self.dh = debughook
+        self.mm = ModelManager
+
+        self.activities = self.register_activities()
+
+    def register_activities(self):
+        activities = []
+        activities.append(Activities.Travel(self.mm, self.dh))
+        activities.append(Activities.RepeatTravel(self.mm, self.dh))
+        activities.append(Activities.ReverseTravel(self.mm, self.dh))
+        activities.append(Activities.EnterLocation(self.mm, self.dh))
+        activities.append(Activities.TakeStuff(self.mm, self.dh))
+        activities.append(Activities.DropStuff(self.mm, self.dh))
+        activities.append(Activities.MoveStuff(self.mm, self.dh))
+
+        return activities
+
+    def parse_commands(self, input):
+        for activity in self.activities:
+            (success, error_code, message) = activity.try_match(input)
+            if success:
+                return (success, error_code, message)
+            elif error_code == 1:  # if there was a genuine error, then stop trying and return it.
+                return (success, error_code, message)
+        return (False, 2, "I don't understand, %s" % input)
+
+
+## deprecated -- DELETE ME
+class CommandParser__old:
 
     quantifiers = ["lbs", "lb", "oz", "qt", "pint", "stick", "stk"]
     identifiers = ["c%02d" % num for num in range(100)] + \
