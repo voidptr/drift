@@ -30,9 +30,50 @@ class Travel(Activity):
         self.regexp_strings = ["(?P<direction>northeast|northwest|southeast|southwest|north|south|east|west|up|down|ne|nw|se|sw|n|s|e|w|u|d)$"]
         self.prepare_command_string_parser()
 
+        self.directions = {
+                "north": "n",
+                "n": "n",
+                "south": "s",
+                "s": "s",
+                "east": "e",
+                "e": "e",
+                "west": "w",
+                "w": "w",
+                "northeast": "ne",
+                "ne": "ne",
+                "northwest": "nw",
+                "nw": "nw",
+                "southeast": "se",
+                "se": "se",
+                "southwest": "sw",
+                "sw": "sw"}
+
     def activity_function(self, parameters):
-        direction = parameters["direction"]
-        return(True, None, "TRAVELING: %s" % direction)
+        direction = self.directions[parameters["direction"]]
+
+        (x, y) = self.mm.get_coordinates(self.mm.state.x, self.mm.state.y, direction)
+
+        if self.mm.is_travelable(x, y):
+            if direction == "n" or direction == "s" or direction == "e" or direction == "w":
+                distance = 1
+            else:
+                distance = 1.4
+
+            self.mm.state.clock.advance(self.mm.get_travel_time() * distance)
+            if direction != self.mm.state.last_direction:
+                self.mm.state.odometer = distance
+            else:
+                self.mm.state.odometer += distance
+            self.mm.state.last_direction = direction
+
+            self.mm.state.x = x
+            self.mm.state.y = y
+
+            return (True, None, "")
+        else:
+            return (False, None, "Can't travel in that direction.")
+
+        #return(True, None, "TRAVELING: %s" % direction)
 
 
 class RepeatTravel(Activity):

@@ -79,3 +79,30 @@ class DriftModelManager:
                 self.state.current_level,
                 self.state.x,
                 self.state.y)
+
+    def is_travelable(self, x, y):
+        return self.world_map.is_travelable(
+                self.state.current_level,
+                x, y)
+
+    def get_coordinates(self, x, y, direction):
+        target_x = x
+        target_y = y
+
+        if direction[0] == "n":  # n, ne, nw, north, northeast, northwest
+            target_y -= 1
+        elif direction[0] == "s":  # s, se, sw, south, southeast, southwest
+            target_y += 1
+
+        if direction[0] == "w" or direction == "nw" or direction == "sw":
+            target_x -= 1
+        elif direction[0] == "e" or direction == "ne" or direction == "se":
+            target_x += 1
+
+        return (target_x, target_y)
+
+    def get_travel_time(self):
+        return self.world_map.get_travel_time(
+                self.state.current_level,
+                self.state.x,
+                self.state.y)

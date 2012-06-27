@@ -166,7 +166,15 @@ class DriftViewManager:
         self.main_window.clear()
         current_text = self.DataModels.get_current_displaying_text()
 
-        self.main_window.draw_text(current_text)
+        gps = "  gps:%s,%s" % (self.DataModels.state.x, self.DataModels.state.y)
+
+        land_info = ""
+        for land in self.DataModels.world_map.levels["root"].Lands:
+            land_info += str(self.DataModels.world_map.levels["root"].Lands[land])
+
+        land_locations = " lands:" + land_info
+
+        self.main_window.draw_text(current_text + gps + land_locations)
         ## TODO - add multipage capability
 
     def refresh_input_box(self):

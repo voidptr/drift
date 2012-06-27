@@ -22,30 +22,8 @@ class DriftController:
 
         (success, error_code, message) = self.cp.parse_commands(input)
 
-        #if not success:
-        self.vm.provide_command_feedback(message)
-
-    ## deprecated -- DELETE ME
-    def process_command__old(self):
-        input = self._get_input()
-
-        (command, parameters) = CommandParser.parse_commands(input)
-
-        if not command in self.commands:
-            self.vm.provide_command_feedback("I don't understand, %s" % command)
-        else:
-            if len(parameters) > 0:
-                (success, message) = self.commands[command](parameters)
-            else:
-                (success, message) = self.commands[command]()
-
-            if not success:
-                self.vm.provide_command_feedback(message)
+        if not success:
+            self.vm.provide_command_feedback(message)
 
     def process_encounter(self):
         self.dh("PROCESS ENCOUNTER")
-
-    def travel(self, parameters):
-        direction = parameters[0]
-        self.dh("TRAVEL! %s" % direction)
-        return (True, "")

@@ -22,41 +22,6 @@ class FeatureType:
         return feature_types
 
 
-class LandType:
-    """
-    The types of landscapes available
-    """
-    def __init__(self, id, traveltime, viewdistance, inside_description, edge_description, lighting_paradigm, noun, effects):
-        self.id = id
-        self.traveltime = traveltime
-        self.viewdistance = viewdistance
-        self.inside_description = inside_description
-        self.edge_description = edge_description
-        self.lighting_paradigm = lighting_paradigm
-        self.noun = noun
-        self.effects = effects
-
-    def get_description(self):
-        return self.inside_description
-
-    def get_lighting_paradigm(self):
-        return self.lighting_paradigm
-
-    @staticmethod
-    def land_types_builder(file):
-        land_types = {}
-        fh = open(file)
-        for line in fh:
-            line = line.strip()
-            if len(line) == 0 or line[0] == "#":
-                continue
-
-            line = line.split(",")
-            land_types[line[0]] = LandType(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7:])
-        fh.close()
-        return land_types
-
-
 class Feature:
     """
     The types of features one may encounter on the map
@@ -91,6 +56,47 @@ class Feature:
         return features
 
 
+class LandType:
+    """
+    The types of landscapes available
+    """
+    def __init__(self, id, traveltime, viewdistance, inside_description, edge_description, lighting_paradigm, noun, effects):
+        self.id = id
+        self.traveltime = int(traveltime)
+        self.viewdistance = int(viewdistance)
+        self.inside_description = inside_description
+        self.edge_description = edge_description
+        self.lighting_paradigm = lighting_paradigm
+        self.noun = noun
+        self.effects = effects
+
+    def get_description(self):
+        return self.inside_description
+
+    def get_lighting_paradigm(self):
+        return self.lighting_paradigm
+
+    def is_travelable(self):
+        return not "impassable" in self.effects
+
+    def get_travel_time(self):
+        return self.traveltime
+
+    @staticmethod
+    def land_types_builder(file):
+        land_types = {}
+        fh = open(file)
+        for line in fh:
+            line = line.strip()
+            if len(line) == 0 or line[0] == "#":
+                continue
+
+            line = line.split(",")
+            land_types[line[0]] = LandType(line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7:])
+        fh.close()
+        return land_types
+
+
 class Land:
     """
     The patchwork of land on the map
@@ -107,11 +113,21 @@ class Land:
         self.br_x = br_x
         self.br_y = br_y
 
+    def __str__(self):
+        return " ID: %s TLx: %s TLy: %s BRx: %s BRy: %s   " % \
+                (self.land_id, self.tl_x, self.tl_y, self.br_x, self.br_y)
+
     def get_description(self):
         return self.land_type.get_description()
 
     def get_lighting_paradigm(self):
         return self.land_type.get_lighting_paradigm()
+
+    def is_travelable(self):
+        return self.land_type.is_travelable()
+
+    def get_travel_time(self):
+        return self.land_type.get_travel_time()
 
     @staticmethod
     def lands_builder(file, land_types):
@@ -229,6 +245,12 @@ class Level:
     def get_lighting_paradigm(self, x, y):
         return self.get_land(x, y).get_lighting_paradigm()
 
+    def is_travelable(self, x, y):
+        return self.get_land(x, y).is_travelable()
+
+    def get_travel_time(self, x, y):
+        return self.get_land(x, y).get_travel_time()
+
 
 class DriftWorld:
     """
@@ -279,3 +301,9 @@ class DriftWorld:
 
     def get_lighting_paradigm(self, level, x, y):
         return self.levels[level].get_lighting_paradigm(x, y)
+
+    def is_travelable(self, level, x, y):
+        return self.levels[level].is_travelable(x, y)
+
+    def get_travel_time(self, level, x, y):
+        return self.levels[level].get_travel_time(x, y)
