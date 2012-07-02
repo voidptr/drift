@@ -3,6 +3,7 @@
 # And window wrapper
 ######################
 
+import random
 import curses
 from optparse import OptionParser
 
@@ -21,6 +22,34 @@ parser.add_option("-d", "--debug_messages", action="store_true", dest="debug_mes
 
 debug_handle = DebugLog()
 debug_handle.init()
+
+
+class map_type:
+    def __init__(self):
+        self.description = "This is a map tile."
+
+    def __str__(self):
+        return str(self.description)
+
+
+class at_location:
+    def __init__(self):
+        self.inventory = []
+
+    def __str__(self):
+        return str(self.inventory)
+
+
+def populate_map():
+
+    map_info = map_type()
+    map_thing = [[(map_info, None)] * 1000000] * 1000000
+
+    return map_thing
+
+    for x in range(0, 1000000, 10):
+        for y in range(0, 1000000, 10):
+            map_thing[x][y] = (map_thing[x][y][0], at_location())
 
 
 def init_colors():
@@ -49,6 +78,7 @@ def handle_input(value):
     """ Handle the keypresses """
 
     input_box.clear()
+    status_bar.clear()
 
     if value == "hi":
         status_bar.draw_text("HELLO TO YOU TOO")
@@ -56,8 +86,22 @@ def handle_input(value):
         curses.echo()
         curses.endwin()
         exit()
+    elif value == "doit":
+        x = random.randrange(0, 1000000)
+        y = random.randrange(0, 1000000)
+
+        randval = random.random()
+
+        if not map_thingy[x][y][1]:
+            map_thingy[x][y] = (map_thingy[x][y][0], at_location())
+
+        map_thingy[x][y][1].inventory.append(randval)
+
+        status_bar.draw_text("Len: %s X: %s Y: %s Desc: %s Inv: %s" % (len(map_thingy), x, y, map_thingy[x][y][0], map_thingy[x][y][1]))
     else:
         status_bar.draw_text("WHA?")
+
+map_thingy = populate_map()
 
 stdscr = curses.initscr()
 colors = init_colors()

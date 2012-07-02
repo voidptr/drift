@@ -1,0 +1,181 @@
+<world>
+    <starting_coordinates>
+        <x>0</x>
+        <y>0</y>
+    </starting_coordinates>
+    <map>
+        <areas>
+            <area id="farms">
+                <attributes>
+                    <lighting type="daylight" />
+                    <peasant_encounter likelyhood="0.05" />
+                    <warrior_encounter likelyhood="0.05" />
+                    <hunting_encounter type="squal" likelyhood="0.05" />
+                    <hunting_encounter type="rabir" likelyhood="0.001" />
+                    <danger level="unsafe" />
+                </attributes>
+                <squares>
+                    <square tl_x=-2 tl_y=-4 br_x=6 br_y=4 />
+                </squares>
+            </area>
+            <area id="glume" lighting="daylight" danger="dangerous">
+                <attributes>
+                    <lighting type="daylight" />
+                    <warrior_encounter likelyhood="0.05" />
+                    <bandit_encounter likelyhood="0.05" />
+                    <hunting_encounter type="squir" likelyhood="0.05" />
+                    <hunting_encounter type="devi" likelyhood="0.001" />
+                    <danger level="dangerous" />
+                </attributes>           
+                <squares>
+                    <square tl_x=-2 tl_y=4 br_x=6 br_y=8 />
+                </squares>
+            </area>
+            <area id="beach" lighting="daylight" danger="unsafe">
+                <attributes>
+                    <lighting type="daylight" />
+                    <warrior_encounter likelyhood="0.05" />
+                    <bandit_encounter likelyhood="0.05" />
+                    <hunting_encounter type="albatross" likelyhood="0.05" />
+                    <danger level="unsafe" />
+                </attributes>             
+                <squares>
+                    <square tl_x=-4 tl_y=-4 br_x=-2 br_y=8 />
+                </squares>
+            </area>
+        </areas>
+        <features>
+            <feature type="farm" x=-1 y=-3 />
+            <feature type="farm" x=3 y=-3 />
+            <feature type="farm" x=5 y=-3 />
+            <feature type="farm" x=-1 y=-1 />
+            <feature type="farm" x=3 y=-1 />
+            <feature type="farm" x=5 y=-1 />
+            <feature type="farm" x=-1 y=3 />
+            <feature type="farm" x=3 y=3 />
+            <feature type="farm" x=5 y=3 />
+            <feature type="farm" x=-1 y=5 />
+            <feature type="farm" x=3 y=5 />
+            <feature type="farm" x=5 y=5 />
+            <feature type="farm" x=-1 y=7 />
+            <feature type="farm" x=3 y=7 />
+            <feature type="farm" x=5 y=7 />
+            <feature type="custom" x=0 y=0>
+<!--                <attributes>
+                </attributes> -->
+                <map>
+                    <startpage id="entrance" />
+                    <page id="entrance">
+                        <attributes>
+                            <lighting type="daylight" />
+                            <danger level="safe" />
+                        </attributes>
+                        <description>You're by the entrance.</description>
+                        <directions>
+                            <direction travel="n" goto="exit" />
+                            <direction travel="w" goto="shop" restriction="daytime" />
+                        </directions>
+                    </page>
+                    <page id="shop">
+                        <attributes>
+                            <lighting type="lamp" />
+                            <danger level="safe" />
+                        </attributes>                  
+                        <description>You're in a shop!</description>                        
+                        <directions>
+                            <direction travel="e" goto="entrance" />
+                        </directions>
+                        <activities>
+                            <action id="steal" />
+                        </activities>
+                        <shop>
+                            <item name="knife" price="6.00" />
+                        </shop>
+                    </page>
+                </map>
+            </feature>
+        </features>
+        <roads>
+            <road orientation="ew" type="path" tl_x=-4 tl_y=-3 br_x=6 br_y=-3 />
+            <road orientation="ew" type="path" tl_x=-4 tl_y=-1 br_x=6 br_y=-1 />
+            <road orientation="ew" type="road" tl_x=-4 tl_y=1 br_x=6 br_y=1 />
+            <road orientation="ew" type="path" tl_x=-4 tl_y=3 br_x=6 br_y=3 />
+            <road orientation="ew" type="path" tl_x=-4 tl_y=5 br_x=6 br_y=5 />
+            <road orientation="ew" type="path" tl_x=-4 tl_y=7 br_x=6 br_y=7 />
+            <road orientation="ns" type="path" tl_x=-3 tl_y=-4 br_x=-3 br_y=8 />
+            <road orientation="ns" type="path" tl_x=-1 tl_y=-4 br_x=-1 br_y=8 />
+            <road orientation="ns" type="road" tl_x=1 tl_y=-4 br_x=1 br_y=8 />
+            <road orientation="ns" type="path" tl_x=3 tl_y=-4 br_x=3 br_y=8 />
+            <road orientation="ns" type="path" tl_x=5 tl_y=-4 br_x=5 br_y=8 />
+        </roads>
+    </map>
+    <feature_types>
+        <feature id="farm">
+            <attributes>
+                <daylight_only />
+            </attributes>
+            <description>
+                <daytime>There is an entrance to a farm! The gate is open.</daytime>
+                <nighttime>There is an entrance to a farm! The gate is shut for the night.</nighttime>
+            </description>
+            <map>
+                <startpage id="entrance" />
+                <page id="entrance">
+                    <attributes>
+                        <lighting type="daylight" />
+                        <danger level="safe" />
+                    </attributes>
+                    <description>
+                        <daytime>You're by the farm entrance. There is a shop to the west, and a well to the east.</daytime>
+                        <nighttime>You're by the farm entrance. There is a shop to the west, which is closed for the night, and a well to the east.</nighttime>
+                    </description>
+                    <directions>
+                        <direction travel="n" goto="exit" />
+                        <direction travel="w" goto="shop" restriction="daytime" />
+                        <direction travel="e" goto="well" />
+                    </directions>
+                </page>
+                <page id="shop">
+                    <attributes>
+                        <lighting type="lamp" />
+                        <danger level="safe" />
+                    </attributes>                  
+                    <description>You're in a farm shop!</description>                        
+                    <directions>
+                        <direction travel="e" goto="entrance" />
+                    </directions>
+                    <activities>
+                        <action id="steal" />
+                    </activities>
+                    <shop>
+                        <item name="grain" price="0.20" unit="bs" />
+                    </shop>             
+                </page>
+                <page id="well">
+                    <attributes>
+                        <lighting type="daylight" />
+                        <danger level="safe" />
+                    </attributes>                  
+                    <description>You're at a farm well! There is water here.</description>                        
+                    <directions>
+                        <direction travel="w" goto="entrance" />
+                    </directions>
+                    <activities>
+                        <action id="gather_water" />
+                    </activities>
+                </page>
+            </map>
+        </feature>
+    </feature_type>
+    <items>
+        <item id="knife">
+            <weight value="0.1" />
+            <attributes>
+                <weapon damage="1>
+                </weapon>
+
+            </attributes>
+
+        </item>
+    </items>
+</world>
